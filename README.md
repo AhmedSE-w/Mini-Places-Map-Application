@@ -24,3 +24,10 @@ A web application that displays places on an interactive map. Users can view exi
 
 
 ## Setup Instructions
+
+
+### Running the Seed Script
+1. cd scripts
+2. pip install psycopg2-binary python-dotenv
+3. Create a .env file with DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
+4. python seed.py
