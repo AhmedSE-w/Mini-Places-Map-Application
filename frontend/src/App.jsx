@@ -73,9 +73,10 @@ function App() {
   };
 
   const handleNearbySearch = () => {
-    const center = {lat: 24.7136, lng: 46.6753};
-    axios.get(`${API_URL}/places/nearby`, {
-      params: {lat: center.lat, lng: center.lng, radius: radius}
+    navigator.geolocation.getCurrentPosition (
+      (position) => {
+        axios.get(`${API_URL}/places/nearby`, {
+      params: {lat: position.coords.latitude, lng: position.coords.longitude, radius: radius}
     })
     .then((response) => {
       setNearbyResults(response.data);
@@ -83,6 +84,8 @@ function App() {
     .catch((err) => {
       console.log(`there was an error: ${err}`);
     });
+      }
+    )
   };
 
   const clearNearby = () => {
@@ -164,8 +167,9 @@ function App() {
                 onChange={(e) => setCategory(e.target.value)}
                  /><br />
                  <button type="submit">Add Place</button>
-                 <button type="button" onClick={() =>
-                  setNewPlaceLocation(null)}>Cancel</button>
+                 <button type="button" onClick={(e) => {
+                  e.stopPropagation();
+                  setNewPlaceLocation(null)}}>Cancel</button>
               </form>
             </Popup>
           </Marker>
