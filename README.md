@@ -31,3 +31,16 @@ A web application that displays places on an interactive map. Users can view exi
 2. pip install psycopg2-binary python-dotenv
 3. Create a .env file with DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
 4. python seed.py
+
+
+### Running the Backend
+1. cd backend
+2. npm install
+3. Create a .env file with DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
+4. node app.js
+
+### Running the Frontend
+1. cd frontend
+2. npm install
+3. npm run dev
+4. Open http://localhost:5173 in your browser
