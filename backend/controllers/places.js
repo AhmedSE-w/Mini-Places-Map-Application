@@ -14,6 +14,16 @@ module.exports = {
   },
 
   create: (req, res) => {
+    const lat = req.body.lat;
+    const lng = req.body.lng;
+
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+      return res.status(400).json({error: "Invalid coordinates"});
+    }
+
+    if (!req.body.name || !req.body.category) {
+      return res.status(400).json({error: "Name and category are required"});
+    }
     Place.create ({
       name: req.body.name,
       category: req.body.category,
@@ -32,6 +42,9 @@ module.exports = {
 
   show: (req, res) => {
     const id = req.params.id;
+    if (isNaN(id)) {
+      return res.status(400).json({error: "Invalid id"});
+    }
     Place.findByPk(id)
     .then((place) => {
       if(!place) {
@@ -65,6 +78,53 @@ module.exports = {
     )
     .then((places) => {
       res.json(places);
+    })
+    .catch((error) => {
+      res.status(500).json({error: error.message});
+    });
+  },
+
+  destroy: (req, res) => {
+    const id = req.params.id;
+
+    if (isNaN(id)) {
+      return res.status(400).json({error: "Invalid id"});
+    }
+
+    Place.destroy({ where: {id: id } })
+    .then((deletedCount) => {
+      if (deletedCount === 0) {
+        res.status(404).json({error: 'Place not found'});
+      } else {
+        res.status(200).json({message: "Place deleted"});
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({error: error.message});
+    });
+  },
+
+  update: (req, res) => {
+    const id = req.params.id;
+
+    if (isNaN(id)) {
+      return res.status(400).json({error: "Invalid id"});
+    }
+
+    if (!req.body.name || !req.body.category) {
+      return res.status(400).json({error: "Name and category are required"});
+    }
+
+    Place.update(
+      { name: req.body.name, category: req.body.category },
+      { where: { id: id } }
+    )
+    .then(([updateCount]) => {
+      if (updateCount === 0) {
+        res.status(404).json({error: "Place not found"});
+      } else {
+        res.status(200).json({message: "Place updated"});
+      }
     })
     .catch((error) => {
       res.status(500).json({error: error.message});
